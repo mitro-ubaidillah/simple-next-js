@@ -1,8 +1,75 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import InputField from '../components/InputField'
+import CardResult from '../components/CardResult'
+import { useState } from 'react'
 
 export default function Home() {
+  const [bil, setBil] = useState([]);
+  const [result, setResult] = useState();
+  const [ganjil, setGanjil] = useState([]);
+
+  const onChangeHandler = (e) => {
+    setBil(e.split(','));
+  }
+
+  const onLengthHandle = () => {
+    setResult(`Jumlah Input: ${bil.length}`);
+  }
+
+  const onMinHandle = () => {
+    let min = 0;
+    for (let i = 0; i < bil?.length; i++) {
+      if (i == 0) {
+        min = parseInt(bil[i]);
+      } else {
+        if (min > parseInt(bil[i])) {
+          min = parseInt(bil[i])
+        }
+      }
+    }
+    setResult(`Bilangan Terkecil ${min}`)
+  }
+
+  const onMaxHandle = () => {
+    let max = 0;
+    for (let i = 0; i < bil?.length; i++) {
+      if (i == 0) {
+        max = parseInt(bil[i]);
+      } else {
+        if (max < parseInt(bil[i])) {
+          max = parseInt(bil[i])
+        }
+      }
+    }
+    setResult(`Bilangan Terbesar ${max}`)
+  }
+
+  const onHandleTotalGanjilGenap =() => {
+    let ganjil = 0;
+    let genap = 0;
+    for (let i = 0; i < bil?.length; i++) {
+      if(parseInt(bil[i]) % 2 == 0) {
+        genap += 1;
+      }else {
+        ganjil +=1
+      }
+    }
+    setResult(`Bilangan Ganjil ada ${ganjil} genap ada ${genap}`);
+  }
+
+  const onHandleCetakGanjilGenap = () => {
+    let ganjil = [];
+    let genap = [];
+    for (let i = 0; i < bil?.length; i++) {
+      if(parseInt(bil[i]) % 2 == 0) {
+        genap.push(parseInt(bil[i]));
+      }else {
+        ganjil.push(parseInt(bil[i]))
+      }
+    }
+    setResult(`Bilangan Ganjil : ${ganjil} Bilangan Genap : ${genap}`);
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -11,61 +78,25 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+      <main className='bg-slate-300'>
+        <div className='w-[700px] top-[25%] left-[25%] absolute text-center border-2 border-gray-400 p-5'>
+          <h1 className="text-4xl font-bold">Himpunan Bilangan Bulat</h1>
+          <div className='w-full'>
+            <InputField
+              value={bil}
+              onChange={(e) => onChangeHandler(e.target.value)}
+              onLength={() => onLengthHandle()}
+              onMin={() => onMinHandle()}
+              onMax={() => onMaxHandle()}
+              onCetak={()=>onHandleCetakGanjilGenap()}
+              onTotal={()=>onHandleTotalGanjilGenap()}
+            />
+            <CardResult result={result} />
+          </div>
         </div>
       </main>
+      <footer></footer>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
   )
 }
